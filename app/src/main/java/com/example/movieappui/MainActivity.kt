@@ -10,38 +10,31 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.movieappui.ui.theme.MovieAppUITheme
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
+            /// from Accompanist, setting a status bar
+            val systemUiController = rememberSystemUiController()
+            systemUiController.setStatusBarColor(
+                color = Color.Transparent,
+                darkIcons = true,
+            )
+            systemUiController.setNavigationBarColor(
+                color = Color.Transparent,
+                darkIcons = true,
+            )
+
             MovieAppUITheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                /// main navigation
+                val navController = rememberNavController()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MovieAppUITheme {
-        Greeting("Android")
     }
 }
