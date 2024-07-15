@@ -1,4 +1,4 @@
-package com.example.movieappui.ui.route
+package com.example.movieappui.route
 
 object RouteName {
     const val Home = "/home"

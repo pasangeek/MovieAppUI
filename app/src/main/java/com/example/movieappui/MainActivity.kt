@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
-import com.example.movieappui.ui.route.AppRoute
+import com.example.movieappui.route.AppRoute
 import com.example.movieappui.ui.theme.MovieAppUITheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 

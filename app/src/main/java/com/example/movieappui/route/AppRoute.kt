@@ -1,4 +1,4 @@
-package com.example.movieappui.ui.route
+package com.example.movieappui.route
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
