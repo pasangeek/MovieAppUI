@@ -1,7 +1,10 @@
 package com.example.movieappui.ui
 
 
+import android.icu.text.UnicodeSetSpanner.CountMethod
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
+
+
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,16 +31,31 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ScaleFactor
+import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role.Companion.Image
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.movieappui.model.MovieModel
+import com.example.movieappui.model.nowPlayingMovie
 import com.example.movieappui.model.upcoming
 import com.example.movieappui.route.RouteName
+import com.example.movieappui.ui.theme.BlueVariant
+import com.example.movieappui.ui.theme.Yellow
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.calculateCurrentOffsetForPage
+import com.google.accompanist.pager.rememberPagerState
+import kotlin.math.absoluteValue
 
 
 @Composable
@@ -159,10 +180,82 @@ fun UpcomingMovie()
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun NowPlayingMovie(
     onMovieClicked: (MovieModel) -> Unit
-){}
+) {
+    HorizontalPager(
+        nowPlayingMovie.size,
+        contentPadding = PaddingValues(start = 48.dp, end = 48.dp)
+    ) { page ->
+
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+                .graphicsLayer {
+                    val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+                    lerp(
+                        start = ScaleFactor(1f, 0.85f),
+                        stop = ScaleFactor(1f, 1f),
+                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                    ).also { scale ->
+                        scaleX = scale.scaleX
+                        scaleY = scale.scaleY
+                    }
+                }
+                .clickable {
+                    onMovieClicked(nowPlayingMovie[page])
+                },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier.clip(RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.BottomCenter
+
+            ) {
+                Image(
+                    painter = painterResource(id = nowPlayingMovie[page].assetImage),
+                    contentDescription = "Movie Image",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = 0.85f)
+                        .height(340.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .graphicsLayer {
+                            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+                            val translation = pageOffset.coerceIn(0f, 1f)
+
+                            translationY = translation * 200
+                        }
+                        .fillMaxWidth(fraction = 0.85f)
+                        .wrapContentHeight()
+                        .background(
+                            BlueVariant
+                        )
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        "Buy Ticket", style = MaterialTheme.typography.headlineSmall.copy(
+                            color = Yellow,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = nowPlayingMovie[page].title,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
 
 @Composable
 fun Categories()
