@@ -179,10 +179,10 @@ fun UpcomingMovie()
         }
     }
 }
-
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun NowPlayingMovie(
+
     onMovieClicked: (MovieModel) -> Unit
 ) {
     HorizontalPager(
