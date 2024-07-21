@@ -1,9 +1,7 @@
 package com.example.movieappui.ui
 
 
-import android.icu.text.UnicodeSetSpanner.CountMethod
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,8 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
-
-
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -35,23 +31,19 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.movieappui.R
@@ -73,7 +65,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-){
+) {
     val scrollState = rememberScrollState()
     Scaffold { padding ->
         Column(
@@ -158,13 +150,13 @@ fun HomeScreen(
     }
 
 }
+
 @Preview
 @Composable
-fun UpcomingMovie()
-{
+fun UpcomingMovie() {
     LazyRow(
         contentPadding = PaddingValues(start = 24.dp)
-    ){
+    ) {
         items(count = upcoming.size) { index ->
             Box(modifier = Modifier
                 .padding(end = 24.dp)
@@ -191,6 +183,7 @@ fun UpcomingMovie()
         }
     }
 }
+
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun NowPlayingMovie(
@@ -270,8 +263,7 @@ fun NowPlayingMovie(
 }
 
 @Composable
-fun Categories()
-{
+fun Categories() {
     val categories = listOf(
         "Animation",
         "Horror",
@@ -308,8 +300,7 @@ fun Categories()
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Banners()
-{
+fun Banners() {
     val banners = listOf(
         R.drawable.banner_1,
         R.drawable.banner_2,

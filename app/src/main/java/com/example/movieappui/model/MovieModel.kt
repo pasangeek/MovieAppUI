@@ -1,6 +1,5 @@
 package com.example.movieappui.model
 
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.example.movieappui.R
 
 data class MovieModel(
