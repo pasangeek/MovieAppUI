@@ -2,10 +2,13 @@ package com.example.movieappui.ui
 
 
 import android.icu.text.UnicodeSetSpanner.CountMethod
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,9 +29,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,16 +53,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.movieappui.R
 import com.example.movieappui.model.MovieModel
 import com.example.movieappui.model.nowPlayingMovie
 import com.example.movieappui.model.upcoming
 import com.example.movieappui.route.RouteName
 import com.example.movieappui.ui.theme.BlueVariant
+import com.example.movieappui.ui.theme.Gray
 import com.example.movieappui.ui.theme.Yellow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 
 
@@ -259,8 +270,109 @@ fun NowPlayingMovie(
 
 @Composable
 fun Categories()
-{}
+{
+    val categories = listOf(
+        "Animation",
+        "Horror",
+        "Action",
+        "Comedy",
+        "Romance",
+        "Sci-fi",
+        "History",
+        "Adventure",
+    )
+    val scrollState = rememberScrollState()
 
+    Row(
+        modifier = Modifier.horizontalScroll(scrollState)
+    ) {
+        repeat(categories.size) { index ->
+            Surface(
+                /// order matters
+                modifier = Modifier
+                    .padding(
+                        start = if (index == 0) 24.dp else 0.dp,
+                        end = 12.dp,
+                    )
+                    .border(width = 1.dp, color = Gray, shape = RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable { }
+                    .padding(12.dp)
+            ) {
+                Text(text = categories[index], style = MaterialTheme.typography.titleSmall)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Banners()
-{}
+{
+    val banners = listOf(
+        R.drawable.banner_1,
+        R.drawable.banner_2,
+        R.drawable.banner_3,
+    )
+
+    val pagerState = rememberPagerState()
+    val bannerIndex = remember { mutableStateOf(0) }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            bannerIndex.value = page
+        }
+    }
+
+    /// auto scroll
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(10_000)
+            tween<Float>(1500)
+            pagerState.animateScrollToPage(
+                page = (pagerState.currentPage + 1) % pagerState.pageCount
+            )
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(190.dp)
+            .padding(horizontal = 24.dp)
+    ) {
+        HorizontalPager(
+            state = pagerState,
+            count = banners.size,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(190.dp)
+        ) { index ->
+            Image(
+                painter = painterResource(id = banners[index]),
+                contentDescription = "Banners",
+                contentScale = ContentScale.FillBounds,
+            )
+        }
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
+        ) {
+            repeat(banners.size) { index ->
+                val height = 12.dp
+                val width = if (index == bannerIndex.value) 28.dp else 12.dp
+                val color = if (index == bannerIndex.value) Yellow else Gray
+
+                Surface(
+                    modifier = Modifier
+                        .padding(end = 6.dp)
+                        .size(width, height)
+                        .clip(RoundedCornerShape(20.dp)),
+                    color = color,
+                ) {
+                }
+            }
+        }
+    }
+}
