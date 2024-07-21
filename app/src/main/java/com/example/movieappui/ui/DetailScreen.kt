@@ -1,4 +1,12 @@
 package com.example.movieappui.ui
 
-class DetailScreen {
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import com.example.movieappui.model.MovieModel
+
+@Composable
+fun DetailScreen(
+    navController: NavHostController,
+    movie: MovieModel,
+) {
 }
