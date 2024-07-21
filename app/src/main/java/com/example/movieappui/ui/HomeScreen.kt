@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
@@ -316,11 +317,11 @@ fun Banners()
     )
 
     val pagerState = rememberPagerState()
-    val bannerIndex = remember { mutableStateOf(0) }
+    val bannerIndex = remember { mutableIntStateOf(0) }
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            bannerIndex.value = page
+            bannerIndex.intValue = page
         }
     }
 
@@ -361,8 +362,8 @@ fun Banners()
         ) {
             repeat(banners.size) { index ->
                 val height = 12.dp
-                val width = if (index == bannerIndex.value) 28.dp else 12.dp
-                val color = if (index == bannerIndex.value) Yellow else Gray
+                val width = if (index == bannerIndex.intValue) 28.dp else 12.dp
+                val color = if (index == bannerIndex.intValue) Yellow else Gray
 
                 Surface(
                     modifier = Modifier
